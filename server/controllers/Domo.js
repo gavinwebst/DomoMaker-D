@@ -20,7 +20,7 @@ const makeDomo = async (req, res) => {
   try {
     const newDomo = new Domo(domoData);
     await newDomo.save();
-    return res.json({ redirect: '/maker' });
+    return res.status(201).json({name: newDomo.name, age: newDomo.age});
   } catch (err) {
     console.log(err);
     if (err.code === 11000) {
@@ -39,7 +39,7 @@ const getDomos = async (req, res) => {
     return res.json({domos: docs});
   } catch (err){
     console.log(err);
-    return res.status(500).json({error: 'Error retrievign domos! '})''
+    return res.status(500).json({error: 'Error retrievign domos! '});
   }
 };
 
