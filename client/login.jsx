@@ -1,4 +1,3 @@
-import { signup } from '../server/controllers/Account.js';
 
 const helper = require('./helper.js');
 const React = require('react');
@@ -20,7 +19,7 @@ const handleLogin = (e) => {
     return false;
 }
 
-const hanldeSignup = (e) => {
+const handleSignup = (e) => {
     e.preventDefault();
     helper.hideError();
 
@@ -29,7 +28,7 @@ const hanldeSignup = (e) => {
     const pass2 = e.target.querySelector('#pass2').value;
 
     if(!username || !pass || !pass2) {
-        helper.handleError('All fields are required! ');
+        helper.handleError('all field are requried')
         return false;
     }
 
@@ -65,7 +64,7 @@ const SignupWindow = (props) => {
     return (
         <form id="signupForm"
             name="signupForm"
-            onsubmit={hanldeSignup}
+            onsubmit={handleSignup}
             action="/signup"
             method="POST"
             className="mainForm"
@@ -76,7 +75,7 @@ const SignupWindow = (props) => {
             <input id="pass" type="password" name="pass" placeholder="password" />
             <lable htmlFor="pass2">Password: </lable>
             <input id="pass2" type="password" name="pass2" placeholder="retype password" />
-            <input className="formSubmit" type="Submit" value="Sign up" />
+            <input className="formSubmit" type="submit" value="Sign up" />
         </form>
     );
 };

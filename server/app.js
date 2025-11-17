@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const expressHandlerbars = require('express-handlebars');
 const helmet = require('helmet');
 const session = require('express-session');
-const RedisStore = require('connect-redis').RedisStore;
+const { RedisStore } = require('connect-redis');
 const redis = require('redis');
 const router = require('./router.js');
 
@@ -25,43 +25,36 @@ const redisClient = redis.createClient({
   url: process.env.REDISCLOUD_URL,
 });
 
-redisClient.on('error', err => console.log('Redis Client Error', err));
+redisClient.on('error', (err) => console.log('Redis Client Error', err));
 
-redisClient.connect().then(() =>{
+redisClient.connect().then(() => {
   const app = express();
 
-app.use(helmet());
-app.use('/assets', express.static(path.resolve(`${__dirname}/../hosted`)));
-app.use(favicon(`${__dirname}/../hosted/img/favicon.png`));
-app.use(compression());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+  app.use(helmet());
+  app.use('/assets', express.static(path.resolve(`${__dirname}/../hosted`)));
+  app.use(favicon(`${__dirname}/../hosted/img/favicon.png`));
+  app.use(compression());
+  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json());
 
-app.use(session({
-  key: 'sessionid',
-  store: new RedisStore({
-    client: redisClient,
-  }),
-  secret: 'Domo Arigato',
-  resave: false,
-  saveUninitialized: false,
-}));
+  app.use(session({
+    key: 'sessionid',
+    store: new RedisStore({
+      client: redisClient,
+    }),
+    secret: 'Domo Arigato',
+    resave: false,
+    saveUninitialized: false,
+  }));
 
-app.engine('handlebars', expressHandlerbars.engine({ defaultLayout: '' }));
-app.set('view engine', 'handlebars');
-app.set('views', `${__dirname}/../views`);
+  app.engine('handlebars', expressHandlerbars.engine({ defaultLayout: '' }));
+  app.set('view engine', 'handlebars');
+  app.set('views', `${__dirname}/../views`);
 
+  router(app);
 
-
-
-
-router(app);
-
-app.listen(port, (err) => {
-  if (err) { throw err; }
-  console.log(`Listening on port ${port}`);
+  app.listen(port, (err) => {
+    if (err) { throw err; }
+    console.log(`Listening on port ${port}`);
+  });
 });
-
-});
-
-

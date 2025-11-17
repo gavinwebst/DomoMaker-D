@@ -4,11 +4,9 @@ const { Account } = models;
 
 const loginPage = (req, res) => res.render('login');
 
-
-
 const logout = (req, res) => {
   req.session.destroy();
-  res.redirect('/')
+  res.redirect('/');
 };
 
 const login = (req, res) => {
@@ -23,7 +21,7 @@ const login = (req, res) => {
     if (err || !account) {
       return res.status(401).json({ error: 'Wrong username or password!' });
     }
-    
+
     req.session.account = Account.toAPI(account);
 
     return res.json({ redirect: '/maker' });
